@@ -1,0 +1,65 @@
+{% extends 'login_base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6 mx-auto py-5 text-center">
+
+            {% if form.errors %}
+                <p class="alert-danger p-3">There is something wrong with the data you entered; please review it.</p>
+            {% elif error %}
+                <p class="alert-danger p-3">{{ error }}</p>
+            {% endif %}
+
+            {% if next %}
+                {% if user.is_authenticated %}
+                <p>Your account doesn't have access to this page. To proceed,
+                please login with an account that has access.</p>
+                {% else %}
+                <p>Please login to see this page.</p>
+                {% endif %}
+            {% endif %}
+
+            <h1>Register</h1>
+
+            <form method="post" action="{% url 'register' %}" class="my-5">
+                {% csrf_token %}
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="text" name="username" autofocus="" autocapitalize="none" autocomplete="off" maxlength="150" required="" id="id_username" placeholder="Username:">
+                    <label class="form-label" for="id_username">Username:</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="email" name="email" autocomplete="off" required="" id="id_email" placeholder="Email:">
+                    <label class="form-label" for="id_email">Email:</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="password" name="password1" autocomplete="off" required="" id="id_password1" placeholder="Password:">
+                    <label class="form-label" for="id_password1">Password:</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" type="password" name="password2" autocomplete="off" required="" id="id_password2" placeholder="Confirm Password:">
+                    <label class="form-label" for="id_password2">Confirm Password:</label>
+                </div>
+
+                <div class="text-center">
+                    <input class="btn btn-primary"  type="submit" value="Register">
+                    <input type="hidden" name="next" value="{{ next }}">
+                </div>
+            </form>
+
+            {# Assumes you setup the password_reset view in your URLconf #}
+{#            <p><a href="{% url 'password_reset' %}">Lost password?</a></p>#}
+
+        <div class="row">
+            <div class="col text-center">
+                <a href="{% url 'login' %}">Already have an account? Login</a>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
