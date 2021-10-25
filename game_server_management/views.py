@@ -9,6 +9,7 @@ import boto3
 def home(request):
     ec2 = boto3.client('ec2')
     response = ec2.describe_instances()
-    instanceName = response['Reservations'][0]['Instances'][0]['KeyName']
+    # Lot of assumptions in the code below; only one instance, only on tag...
+    instanceName = response['Reservations'][0]['Instances'][0]['Tags'][0]['Value']
 
     return render(request, 'game_server_management/index.html', {'instanceName': instanceName})
