@@ -5,7 +5,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 import boto3
 
-
 # Create your views here.
 from game_server_management.models import Server
 
@@ -13,7 +12,8 @@ from game_server_management.models import Server
 @login_required
 def home(request):
     ec2 = boto3.client('ec2', region_name='us-west-2')
-    response = ec2.describe_instances()
+    # response = ec2.describe_instances()
+
     # Lot of assumptions in the code below; only one instance, only on tag...
     # Should be able to update this to use an actual list of servers, and
     # to filter the results from AWS using filters in the 'describe_instances' function call.
@@ -23,14 +23,27 @@ def home(request):
     # ec2 = boto3.resource('ec2')
     # instance = ec2.Instance('id')
 
-    instanceName = response['Reservations'][0]['Instances'][0]['Tags'][0]['Value']
+    ec2_instances = []
+    instance_ids_to_lookup = []
+    server_objects = Server.objects.filter(owner=request.user)
+    for server_object in server_objects:
+        # ec2_instances.append(ec2.Instance(server_object.instance_id))
+        instance_ids_to_lookup.append(server_object.instance_id)
+    ec2_resource = boto3.resource('ec2', region_name='us-west-2')
+    ec2_instances = ec2_resource.instances.filter(
+        InstanceIds=instance_ids_to_lookup
+    )
 
-    return render(request, 'game_server_management/index.html', {'instanceName': instanceName})
+    # instanceName = response['Reservations'][0]['Instances'][0]['Tags'][0]['Value']
+
+    return render(request, 'game_server_management/index.html', {
+        'instances': ec2_instances,
+        'server_objects': server_objects
+    })
 
 
 @login_required
 def create_new_server(request):
-
     # Create new instance:
 
     ec2 = boto3.client('ec2', region_name='us-west-2')
@@ -84,4 +97,26 @@ def create_new_server(request):
 
     # Redirect to homepage
 
+    return redirect('home')
+
+
+@login_required
+def start_server(request, instance_id):
+    ec2 = boto3.client('ec2', region_name='us-west-2')
+    response = ec2.start_instances(
+        InstanceIds=[
+            instance_id
+        ]
+    )
+    return redirect('home')
+
+
+@login_required
+def stop_server(request, instance_id):
+    ec2 = boto3.client('ec2', region_name='us-west-2')
+    response = ec2.stop_instances(
+        InstanceIds=[
+            instance_id
+        ]
+    )
     return redirect('home')
