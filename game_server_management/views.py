@@ -11,30 +11,16 @@ from game_server_management.models import Server
 
 @login_required
 def home(request):
-    ec2 = boto3.client('ec2', region_name='us-west-2')
-    # response = ec2.describe_instances()
-
-    # Lot of assumptions in the code below; only one instance, only on tag...
-    # Should be able to update this to use an actual list of servers, and
-    # to filter the results from AWS using filters in the 'describe_instances' function call.
-
-    # Optionally, can use the ec2 instance object to grab each instance by id,
-    # Which could be pulled from the db:
-    # ec2 = boto3.resource('ec2')
-    # instance = ec2.Instance('id')
-
-    ec2_instances = []
     instance_ids_to_lookup = []
     server_objects = Server.objects.filter(owner=request.user)
+
     for server_object in server_objects:
-        # ec2_instances.append(ec2.Instance(server_object.instance_id))
         instance_ids_to_lookup.append(server_object.instance_id)
     ec2_resource = boto3.resource('ec2', region_name='us-west-2')
+
     ec2_instances = ec2_resource.instances.filter(
         InstanceIds=instance_ids_to_lookup
     )
-
-    # instanceName = response['Reservations'][0]['Instances'][0]['Tags'][0]['Value']
 
     return render(request, 'game_server_management/index.html', {
         'instances': ec2_instances,

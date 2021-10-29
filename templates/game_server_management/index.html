@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load boto3_filters %}
 
 {% block content %}
 
@@ -26,8 +27,17 @@
                             </div>
                             <div class="d-flex justify-content-between text-start ms-4">
                                 <div>
+                                    {% if instance.state.Name == 'running' %}
+                                        <p class="mb-1">IP Address: {{ instance.public_ip_address }}</p>
+                                    {% endif %}
                                     <p class="mb-1">Created: {{ instance.launch_time }}</p>
-                                    <p class="mb-1">Online: [# Days]</p>
+
+{#                                    <p>{{ instance.state_transition_reason }}</p>#}
+                                    {% if instance.state.Name == 'running' and instance.state.state_transition_reason != None %}
+                                        <p class="mb-1">Online Since: {{ instance.state_transition_reason|get_state_change_timestamp }}</p>
+                                    {% elif instance.state_transition_reason %}
+                                        <p class="mb-1">Offline Since: {{ instance.state_transition_reason|get_state_change_timestamp }}</p>
+                                    {% endif %}
                                     <p class="mb-1">Monthly Cost Est.: [$ Amount]</p>
                                 </div>
                                 <div>
