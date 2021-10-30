@@ -49,8 +49,8 @@ def create_new_server(request):
             },
         ],
         # Ubuntu 20.04 Image
-        ImageId='ami-03d5c68bab01f3496',
-        InstanceType='t2.micro',
+        ImageId='ami-021710cc2ad32742b',
+        InstanceType='t2.xlarge',
         InstanceInitiatedShutdownBehavior='stop',
         # Could have this generated? Keep them all under one key for ease of testing.
         KeyName='game_server_key',
