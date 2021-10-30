@@ -18,9 +18,12 @@ def home(request):
         instance_ids_to_lookup.append(server_object.instance_id)
     ec2_resource = boto3.resource('ec2', region_name='us-west-2')
 
-    ec2_instances = ec2_resource.instances.filter(
-        InstanceIds=instance_ids_to_lookup
-    )
+    if instance_ids_to_lookup:
+        ec2_instances = ec2_resource.instances.filter(
+            InstanceIds=instance_ids_to_lookup
+        )
+    else:
+        ec2_instances = None
 
     return render(request, 'game_server_management/index.html', {
         'instances': ec2_instances,
