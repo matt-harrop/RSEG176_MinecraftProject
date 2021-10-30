@@ -8,52 +8,64 @@
         <div class="col-sm-6 mx-auto py-5 text-center">
             <h1 class="mb-5">Minecraft Server Rentals</h1>
 
-            <div class="row">
-                <div class="col text-end my-3">
-                    <a href="{% url 'create_server' %}" class="btn btn-success">+ New Server</a>
+            {% if instances is None %}
+
+                <div class="row">
+                    <div class="col text-center my-3">
+                        <a href="{% url 'create_server' %}" class="btn btn-success p-4 fs-4">+ Create Your First Server</a>
+                    </div>
                 </div>
-            </div>
 
-            {% for instance in instances %}
+            {% else %}
 
-                {% for tag_dict in instance.tags %}
+                <div class="row">
+                    <div class="col text-end my-3">
+                        <a href="{% url 'create_server' %}" class="btn btn-success">+ New Server</a>
+                    </div>
+                </div>
 
-                    {% if tag_dict.Key == 'Name' %}
+                {% for instance in instances %}
 
-                        <div class="border rounded-3 p-3">
-                            <div class="d-flex justify-content-between">
-                                <h3>{{ tag_dict.Value }}</h3>
-                                <small>State: {{ instance.state.Name }}</small>
-                            </div>
-                            <div class="d-flex justify-content-between text-start ms-4">
-                                <div>
-                                    {% if instance.state.Name == 'running' %}
-                                        <p class="mb-1">IP Address: {{ instance.public_ip_address }}</p>
-                                    {% endif %}
-                                    <p class="mb-1">Created: {{ instance.launch_time }}</p>
+                    {% for tag_dict in instance.tags %}
 
-{#                                    <p>{{ instance.state_transition_reason }}</p>#}
-                                    {% if instance.state.Name == 'running' and instance.state.state_transition_reason != None %}
-                                        <p class="mb-1">Online Since: {{ instance.state_transition_reason|get_state_change_timestamp }}</p>
-                                    {% elif instance.state_transition_reason %}
-                                        <p class="mb-1">Offline Since: {{ instance.state_transition_reason|get_state_change_timestamp }}</p>
-                                    {% endif %}
-                                    <p class="mb-1">Monthly Cost Est.: [$ Amount]</p>
+                        {% if tag_dict.Key == 'Name' %}
+
+                            <div class="border rounded-3 p-3">
+                                <div class="d-flex justify-content-between">
+                                    <h3>{{ tag_dict.Value }}</h3>
+                                    <small>State: {{ instance.state.Name }}</small>
                                 </div>
-                                <div>
-                                    {% if instance.state.Name == 'stopped' %}
-                                        <a href="{% url 'start_server' instance.instance_id %}" class="btn btn-success d-block mb-1">Start</a>
-                                    {% elif instance.state.Name == 'running' %}
-                                        <a href="{% url 'stop_server' instance.instance_id %}" class="btn btn-warning d-block mb-1">Stop</a>
-                                    {% endif %}
-                                    <a href="" class="btn btn-danger d-block">Delete</a>
+                                <div class="d-flex justify-content-between text-start ms-4">
+                                    <div>
+                                        {% if instance.state.Name == 'running' %}
+                                            <p class="mb-1">IP Address: {{ instance.public_ip_address }}</p>
+                                        {% endif %}
+                                        <p class="mb-1">Created: {{ instance.launch_time }}</p>
+
+    {#                                    <p>{{ instance.state_transition_reason }}</p>#}
+                                        {% if instance.state.Name == 'running' and instance.state.state_transition_reason != None %}
+                                            <p class="mb-1">Online Since: {{ instance.state_transition_reason|get_state_change_timestamp }}</p>
+                                        {% elif instance.state_transition_reason %}
+                                            <p class="mb-1">Offline Since: {{ instance.state_transition_reason|get_state_change_timestamp }}</p>
+                                        {% endif %}
+                                        <p class="mb-1">Monthly Cost Est.: [$ Amount]</p>
+                                    </div>
+                                    <div>
+                                        {% if instance.state.Name == 'stopped' %}
+                                            <a href="{% url 'start_server' instance.instance_id %}" class="btn btn-success d-block mb-1">Start</a>
+                                        {% elif instance.state.Name == 'running' %}
+                                            <a href="{% url 'stop_server' instance.instance_id %}" class="btn btn-warning d-block mb-1">Stop</a>
+                                        {% endif %}
+                                        <a href="" class="btn btn-danger d-block">Delete</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                    {% endif %}
+                        {% endif %}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+
+        {% endif %}
 
         </div>
     </div>
