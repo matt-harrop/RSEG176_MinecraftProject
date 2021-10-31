@@ -3,7 +3,6 @@ import json
 import boto3
 from django.contrib.auth.models import User
 from django.db import models
-import awspricing
 from datetime import datetime
 import calendar
 
