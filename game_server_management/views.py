@@ -51,7 +51,7 @@ def create_new_server(request):
         # Custom Minecraft server AMI.
         ImageId='ami-021710cc2ad32742b',
         # Shouldn't need an image this large; just needed something with more memory than t2.micro for testing.
-        InstanceType='t2.xlarge',
+        InstanceType='t2.medium',
         InstanceInitiatedShutdownBehavior='stop',
         # Could have this generated? Keep them all under one key for ease of testing.
         KeyName='game_server_key',
