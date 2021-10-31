@@ -25,9 +25,19 @@ def home(request):
     else:
         ec2_instances = None
 
+    full_instances = []
+    for server_object in server_objects:
+        dict_to_add = {"model_object": server_object}
+        for aws_object in ec2_instances:
+            if aws_object.instance_id == server_object.instance_id:
+                dict_to_add["aws_object"] = aws_object
+        full_instances.append(dict_to_add)
+
     return render(request, 'game_server_management/index.html', {
-        'instances': ec2_instances,
-        'server_objects': server_objects
+        # 'instances': ec2_instances,
+        # 'server_objects': server_objects
+        'instances': full_instances,
+        'filler_price': server_objects[0].get_max_monthly_cost()
     })
 
 
