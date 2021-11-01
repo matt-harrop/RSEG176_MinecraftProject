@@ -104,6 +104,17 @@ def create_new_server(request):
 
     return redirect('home')
 
+@login_required
+def delete_server(request, instance_id):
+    ec2 = boto3.client('ec2', region_name='us-west-2')
+    response = ec2.terminate_instances(
+        InstanceIds=[
+            instance_id
+        ]
+    )
+    server = Server.objects.filter(instance_id=instance_id)
+    server.delete()
+    return redirect('home')
 
 @login_required
 def start_server(request, instance_id):

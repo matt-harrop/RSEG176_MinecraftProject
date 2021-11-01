@@ -57,7 +57,7 @@
                                         {% elif instance.aws_object.state.Name == 'running' %}
                                             <a href="{% url 'stop_server' instance.aws_object.instance_id %}" class="btn btn-warning d-block mb-1">Stop</a>
                                         {% endif %}
-                                        <a href="" class="btn btn-danger d-block">Delete</a>
+                                        <a href="{% url 'delete_server' instance.aws_object.instance_id %}" class="btn btn-danger d-block">Delete</a>
                                     </div>
                                 </div>
                             </div>
