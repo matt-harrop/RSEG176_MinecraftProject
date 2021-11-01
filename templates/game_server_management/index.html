@@ -8,7 +8,7 @@
         <div class="col-sm-6 mx-auto py-5 text-center">
             <h1 class="mb-5 display-3">Minecraft Server Rentals</h1>
 
-            {% if instances is None %}
+            {% if not instances %}
 
                 <div class="row">
                     <div class="col text-center my-3">
@@ -49,7 +49,7 @@
                                             <p class="mb-1">Offline Since: {{ instance.aws_object.state_transition_reason|get_state_change_timestamp }}</p>
                                         {% endif %}
                                         <p class="mb-1">Max Monthly Cost: {{ filler_price }}</p>
-                                        <p class="mb-1">Monthly Cost Est.: [$ Amount]</p>
+                                        <p class="mb-1">Monthly Cost Est.: {{ instance.model_object.get_current_monthly_cost }}</p>
                                     </div>
                                     <div>
                                         {% if instance.aws_object.state.Name == 'stopped' %}

@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -16,6 +17,7 @@ def home(request):
 
     for server_object in server_objects:
         instance_ids_to_lookup.append(server_object.instance_id)
+
     ec2_resource = boto3.resource('ec2', region_name='us-west-2')
 
     if instance_ids_to_lookup:
@@ -89,8 +91,11 @@ def create_new_server(request):
     )
 
     # Save new server object to DB, tied to the current user:
-
     new_server = Server()
+
+    # Any processing that needs to be done to new Server objects:
+    new_server.billing_hours_month = datetime.now().month
+
     new_server.owner = request.user
     new_server.instance_id = response['Instances'][0]['InstanceId']
     new_server.save()
@@ -102,21 +107,46 @@ def create_new_server(request):
 
 @login_required
 def start_server(request, instance_id):
+    # Start server on AWS
     ec2 = boto3.client('ec2', region_name='us-west-2')
     response = ec2.start_instances(
         InstanceIds=[
             instance_id
         ]
     )
+    # Update Server object in DB
+    server = Server.objects.filter(instance_id=instance_id).first()
+    # Wipe running total if last stope time was the previous month.
+    if server.last_stop_time and server.last_start_time.timestamp() < datetime.now().replace(day=1, hour=0).timestamp():
+        server.billing_hours_running_total = 0
+        server.billing_hours_month = datetime.now().month
+    # Update last start time.
+    server.last_start_time = datetime.now()
+    server.save()
     return redirect('home')
 
 
 @login_required
 def stop_server(request, instance_id):
+    # Stop server on AWS
     ec2 = boto3.client('ec2', region_name='us-west-2')
     response = ec2.stop_instances(
         InstanceIds=[
             instance_id
         ]
     )
+    # Update Server object in DB:
+    server = Server.objects.filter(instance_id=instance_id).first()
+    first_of_month = datetime.now().replace(day=1, hour=0)
+    if server.last_start_time.timestamp() < first_of_month.timestamp():
+        start_time = first_of_month
+        server.billing_hours_month = datetime.now().month
+        server.billing_hours_running_total = 0
+    else:
+        start_time = server.last_start_time
+    current_duration_ts = datetime.now().timestamp() - start_time.timestamp()
+    # I believe timestamps are in seconds...
+    current_duration_hours = divmod(current_duration_ts, 3600)
+    server.billing_hours_running_total = current_duration_hours
+    server.save()
     return redirect('home')
