@@ -37,7 +37,7 @@ def home(request):
         # 'instances': ec2_instances,
         # 'server_objects': server_objects
         'instances': full_instances,
-        'filler_price': server_objects[0].get_max_monthly_cost()
+        'filler_price': server_objects[0].get_max_monthly_cost() if server_objects else "0.00"
     })
 
 
