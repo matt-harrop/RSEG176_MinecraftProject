@@ -37,7 +37,7 @@ class Server(models.Model):
         total_billing_hours = 0
         hourly_cost = float(get_on_demand_instance_price(get_region_name('us-west-2'), 't2.medium', 'Linux'))
 
-        if instance.state == 'running':
+        if instance.state["Name"] == 'running':
             # get current period number of hours
             # make sure to go no further back then the start of the current month.
 
@@ -51,7 +51,7 @@ class Server(models.Model):
                 start_time = self.last_start_time
             current_duration_ts = datetime.now().timestamp() - start_time.timestamp()
             # I believe timestamps are in seconds...
-            current_duration_hours = divmod(current_duration_ts, 3600)
+            current_duration_hours = divmod(current_duration_ts, 3600)[0]
             total_billing_hours += current_duration_hours
 
             # Does the running total for billing hours need to be added?

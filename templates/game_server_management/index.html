@@ -48,8 +48,8 @@
                                         {% elif instance.aws_object.state_transition_reason %}
                                             <p class="mb-1">Offline Since: {{ instance.aws_object.state_transition_reason|get_state_change_timestamp }}</p>
                                         {% endif %}
-                                        <p class="mb-1">Max Monthly Cost: {{ filler_price }}</p>
-                                        <p class="mb-1">Monthly Cost Est.: {{ instance.model_object.get_current_monthly_cost }}</p>
+                                        <p class="mb-1">Max Monthly Cost: ${{ filler_price }}</p>
+                                        <p class="mb-1">Monthly Cost Est.: ${{ instance.model_object.get_current_monthly_cost }}</p>
                                     </div>
                                     <div>
                                         {% if instance.aws_object.state.Name == 'stopped' %}

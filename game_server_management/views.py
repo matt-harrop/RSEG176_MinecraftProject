@@ -157,7 +157,7 @@ def stop_server(request, instance_id):
         start_time = server.last_start_time
     current_duration_ts = datetime.now().timestamp() - start_time.timestamp()
     # I believe timestamps are in seconds...
-    current_duration_hours = divmod(current_duration_ts, 3600)
-    server.billing_hours_running_total = current_duration_hours
+    current_duration_hours = divmod(current_duration_ts, 3600)[0]
+    server.billing_hours_running_total += current_duration_hours
     server.save()
     return redirect('home')
