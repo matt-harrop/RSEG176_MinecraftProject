@@ -104,6 +104,7 @@ def create_new_server(request):
 
     return redirect('home')
 
+
 @login_required
 def delete_server(request, instance_id):
     ec2 = boto3.client('ec2', region_name='us-west-2')
@@ -116,6 +117,7 @@ def delete_server(request, instance_id):
     server.delete()
     return redirect('home')
 
+
 @login_required
 def start_server(request, instance_id):
     # Start server on AWS
@@ -127,7 +129,7 @@ def start_server(request, instance_id):
     )
     # Update Server object in DB
     server = Server.objects.filter(instance_id=instance_id).first()
-    # Wipe running total if last stope time was the previous month.
+    # Wipe running total if last stop time was the previous month.
     if server.last_stop_time and server.last_start_time.timestamp() < datetime.now().replace(day=1, hour=0).timestamp():
         server.billing_hours_running_total = 0
         server.billing_hours_month = datetime.now().month
