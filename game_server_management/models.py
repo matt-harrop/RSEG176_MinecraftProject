@@ -4,6 +4,7 @@ from django.db import models
 from datetime import datetime
 import calendar
 from .aws_helpers import *
+from django.utils.translation import gettext_lazy as _
 
 from django.utils import timezone
 
@@ -13,6 +14,27 @@ from .aws_helpers import get_on_demand_instance_price, get_region_name
 from pkg_resources import resource_filename
 
 
+class Schedule(models.Model):
+    name = models.CharField(max_length=200)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    class DaysOfWeek(models.TextChoices):
+        MONDAY = 'Mon', _('Monday')
+        TUESDAY = 'Tue', _('Tuesday')
+        WEDNESDAY = 'Wed', _('Wednesday')
+        THURSDAY = 'Thu', _('Thursday')
+        FRIDAY = 'Fri', _('Friday')
+        SATURDAY = 'Sat', _('Saturday')
+        SUNDAY = 'Sun', _('Sunday')
+
+    days = models.CharField(
+        max_length=30,
+        choices=DaysOfWeek.choices,
+        default=None,
+    )
+
+
 class Server(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     instance_id = models.CharField(max_length=200)
@@ -20,6 +42,7 @@ class Server(models.Model):
     last_start_time = models.DateTimeField(default=timezone.now)
     billing_hours_running_total = models.IntegerField(default=0)
     billing_hours_month = models.IntegerField(default=1)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, default=None, null=True)
 
     def get_max_monthly_cost(self):
         # Get current price for a given instance, region and os

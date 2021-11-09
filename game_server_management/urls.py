@@ -8,5 +8,7 @@ urlpatterns = [
     path('delete/<str:instance_id>', views.delete_server, name='delete_server'),
     path('start/<str:instance_id>', views.start_server, name='start_server'),
     path('stop/<str:instance_id>', views.stop_server, name='stop_server'),
-
+    path('schedules/', views.list_schedules, name='list_schedules'),
+    path('schedules/create', views.create_update_schedule, name='create_schedule'),
+    path('schedules/<int:id>/update', views.create_update_schedule, name='update_schedule'),
 ]

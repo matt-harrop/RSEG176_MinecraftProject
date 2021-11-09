@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load boto3_filters %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6 mx-auto py-5 text-center">
+            <h1 class="mb-5 display-3">Schedules</h1>
+
+            {% if not schedules %}
+
+                <div class="row">
+                    <div class="col text-center my-3">
+                        <a href="{% url 'create_schedule' %}" class="btn btn-success p-4 fs-4">+ Create Your First Schedule</a>
+                    </div>
+                </div>
+
+            {% else %}
+
+                <div class="row">
+                    <div class="col text-end my-3">
+                        <a href="{% url 'create_server' %}" class="btn btn-success">+ New Server</a>
+                    </div>
+                </div>
+
+                {% for instance in instances %}
+
+                    {% for tag_dict in instance.aws_object.tags %}
+
+                        {% if tag_dict.Key == 'Name' %}
+
+                            <div class="border rounded-3 p-3">
+                                <div class="d-flex justify-content-between">
+                                    <h3>{{ tag_dict.Value }}</h3>
+                                    <small>State: {{ instance.aws_object.state.Name|upper }}</small>
+                                </div>
+                                <div class="d-flex justify-content-between text-start ms-4">
+                                    <div>
+                                        {% if instance.aws_object.state.Name == 'running' %}
+                                            <p class="mb-1">IP Address: {{ instance.aws_object.public_ip_address }}</p>
+                                        {% endif %}
+                                        <p class="mb-1">Created: {{ instance.aws_object.launch_time }}</p>
+
+    {#                                    <p>{{ instance.aws_object.state_transition_reason }}</p>#}
+                                        {% if instance.aws_object.state.Name == 'running' and instance.aws_object.state.state_transition_reason != None %}
+                                            <p class="mb-1">Online Since: {{ instance.aws_object.state_transition_reason|get_state_change_timestamp }}</p>
+                                        {% elif instance.aws_object.state_transition_reason %}
+                                            <p class="mb-1">Offline Since: {{ instance.aws_object.state_transition_reason|get_state_change_timestamp }}</p>
+                                        {% endif %}
+                                        <p class="mb-1">Max Monthly Cost: ${{ filler_price }}</p>
+                                        <p class="mb-1">Monthly Cost Est.: ${{ instance.model_object.get_current_monthly_cost }}</p>
+                                    </div>
+                                    <div>
+                                        {% if instance.aws_object.state.Name == 'stopped' %}
+                                            <a href="{% url 'start_server' instance.aws_object.instance_id %}" class="btn btn-success d-block mb-1">Start</a>
+                                        {% elif instance.aws_object.state.Name == 'running' %}
+                                            <a href="{% url 'stop_server' instance.aws_object.instance_id %}" class="btn btn-warning d-block mb-1">Stop</a>
+                                        {% endif %}
+                                        <a href="{% url 'delete_server' instance.aws_object.instance_id %}" class="btn btn-danger d-block">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
+                {% endfor %}
+            {% endfor %}
+
+        {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

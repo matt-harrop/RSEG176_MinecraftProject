@@ -7,7 +7,8 @@ from django.shortcuts import render, redirect
 import boto3
 
 # Create your views here.
-from game_server_management.models import Server
+from game_server_management.forms import ScheduleCreationForm
+from game_server_management.models import Server, Schedule
 
 
 @login_required
@@ -163,3 +164,34 @@ def stop_server(request, instance_id):
     server.billing_hours_running_total += current_duration_hours
     server.save()
     return redirect('home')
+
+
+def list_schedules(request):
+    schedules = Schedule.objects.all()
+    return render(request, 'game_server_management/list-schedules.html', {'schedules': schedules})
+
+
+def create_update_schedule(request, id=None):
+    if request.method == 'GET':
+        if id:
+            schedule = Schedule.objects.get(id=id)
+            form = ScheduleCreationForm(instance=schedule)
+            return render(request, 'game_server_management/create-schedule.html',
+                          {'form': form, 'schedule': schedule})
+        else:
+            return render(request, 'game_server_management/create-schedule.html',
+                          {'create_form': ScheduleCreationForm()})
+    # else:
+    #     try:
+    #         if id:
+    #             provider = Provider.objects.get(id=id)
+    #             form = ProviderCreationForm(request.POST, instance=provider)
+    #         else:
+    #             form = ProviderCreationForm(request.POST)
+    #         new_provider = form.save(commit=False)
+    #         new_provider.save()
+    #         return redirect('list_providers')
+    #     except ValueError:
+    #         return render(request, 'main_dashboard/providers/create_provider.html',
+    #                       {'create_form': ProviderCreationForm(),
+    #                        'error': 'Some data submitted was invalid; please correct and try again.'})

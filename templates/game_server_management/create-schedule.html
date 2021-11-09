@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <h1 class="mt-5 mb-3 text-center">Create/Update Schedule</h1>
+    </div>
+    <div class="row justify-content-center mb-5">
+        <div class="col-sm-4">
+            <p style="color: red">
+            {{ error }}
+            </p>
+
+
+{#            <form method="post" class="row">#}
+{#                {% csrf_token %}#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_name">Number</label>#}
+{#                    {{ create_form.number }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_country">Country/Description</label>#}
+{#                    {{ create_form.country }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_location">Location</label>#}
+{#                    {{ create_form.location }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_type">Type</label>#}
+{#                    {{ create_form.type }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_reg_service_fee">Reg Service Fee</label>#}
+{#                    {{ create_form.reg_service_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_reg_consulting_fee">Reg Consulting Fee</label>#}
+{#                    {{ create_form.reg_consulting_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_enh_service_fee">Enh Service Fee</label>#}
+{#                    {{ create_form.enh_service_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_enh_consulting_fee">Enh Consulting Fee</label>#}
+{#                    {{ create_form.enh_consulting_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_ded_service_fee">Ded Service Fee</label>#}
+{#                    {{ create_form.ded_service_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_ded_consulting_fee">Ded Consulting Fee</label>#}
+{#                    {{ create_form.ded_consulting_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_reg_lite_service_fee">Reg-Lite Service Fee</label>#}
+{#                    {{ create_form.reg_lite_service_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_reg_lite_consulting_fee">Reg-Lite Consulting Fee</label>#}
+{#                    {{ create_form.reg_lite_consulting_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_enh_lite_service_fee">Enh-Lite Service Fee</label>#}
+{#                    {{ create_form.enh_lite_service_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_enh_lite_consulting_fee">Enh-Lite Consulting Fee</label>#}
+{#                    {{ create_form.enh_lite_consulting_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_mobile_gateway_service_fee">Mobile Gateway Service Fee</label>#}
+{#                    {{ create_form.mobile_gateway_service_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_mobile_gateway_consulting_fee">Mobile Gateway Consulting Fee</label>#}
+{#                    {{ create_form.mobile_gateway_consulting_fee }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_is_low_tech-ao">Low Tech AO?</label>#}
+{#                    {{ create_form.is_low_tech_ao }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_no_historical_usage">No Historical Usage?</label>#}
+{#                    {{ create_form.no_historical_usage }}#}
+{#                </div>#}
+{#                <div class="col-6 mb-3">#}
+{#                    <label for="id_notes">Notes</label>#}
+{#                    {{ create_form.notes }}#}
+{#                </div>#}
+{#                <div class="col-12 mt-3">#}
+{#                    <div class="col-sm-5 col-6 mx-auto">#}
+{#                        <button type="submit" class="btn btn-primary w-100">Save</button>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </form>#}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
