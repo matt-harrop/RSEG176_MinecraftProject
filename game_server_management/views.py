@@ -130,12 +130,7 @@ def start_server(request, instance_id):
     )
     # Update Server object in DB
     server = Server.objects.filter(instance_id=instance_id).first()
-    # Wipe running total if last stop time was the previous month.
-    if server.last_stop_time and server.last_start_time.timestamp() < datetime.now().replace(day=1, hour=0).timestamp():
-        server.billing_hours_running_total = 0
-        server.billing_hours_month = datetime.now().month
-    # Update last start time.
-    server.last_start_time = datetime.now()
+    server.update_times_start()
     server.save()
     return redirect('home')
 
@@ -151,17 +146,7 @@ def stop_server(request, instance_id):
     )
     # Update Server object in DB:
     server = Server.objects.filter(instance_id=instance_id).first()
-    first_of_month = datetime.now().replace(day=1, hour=0)
-    if server.last_start_time.timestamp() < first_of_month.timestamp():
-        start_time = first_of_month
-        server.billing_hours_month = datetime.now().month
-        server.billing_hours_running_total = 0
-    else:
-        start_time = server.last_start_time
-    current_duration_ts = datetime.now().timestamp() - start_time.timestamp()
-    # I believe timestamps are in seconds...
-    current_duration_hours = divmod(current_duration_ts, 3600)[0]
-    server.billing_hours_running_total += current_duration_hours
+    server.update_times_stop()
     server.save()
     return redirect('home')
 

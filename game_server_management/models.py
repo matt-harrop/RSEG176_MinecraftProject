@@ -94,3 +94,25 @@ class Server(models.Model):
         # Otherwise, server is not currently running and there is no running total for the month:
         else:
             return f'{0.00}'
+
+    def update_times_start(self):
+        # Wipe running total if last stop time was the previous month.
+        if self.last_stop_time and self.last_start_time.timestamp() < datetime.now().replace(day=1, hour=0).timestamp():
+            self.billing_hours_running_total = 0
+            self.billing_hours_month = datetime.now().month
+        # Update last start time.
+        self.last_start_time = datetime.now()
+        
+    def update_times_stop(self):
+        first_of_month = datetime.now().replace(day=1, hour=0)
+        if self.last_start_time.timestamp() < first_of_month.timestamp():
+            start_time = first_of_month
+            self.billing_hours_month = datetime.now().month
+            self.billing_hours_running_total = 0
+        else:
+            start_time = self.last_start_time
+        current_duration_ts = datetime.now().timestamp() - start_time.timestamp()
+        # I believe timestamps are in seconds...
+        current_duration_hours = divmod(current_duration_ts, 3600)[0]
+        self.billing_hours_running_total += current_duration_hours
+        self.last_stop_time = datetime.now()
