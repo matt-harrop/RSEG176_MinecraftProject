@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
 
 <div class="container-fluid">
@@ -13,92 +15,85 @@
             </p>
 
 
-{#            <form method="post" class="row">#}
-{#                {% csrf_token %}#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_name">Number</label>#}
-{#                    {{ create_form.number }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_country">Country/Description</label>#}
-{#                    {{ create_form.country }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_location">Location</label>#}
-{#                    {{ create_form.location }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_type">Type</label>#}
-{#                    {{ create_form.type }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_reg_service_fee">Reg Service Fee</label>#}
-{#                    {{ create_form.reg_service_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_reg_consulting_fee">Reg Consulting Fee</label>#}
-{#                    {{ create_form.reg_consulting_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_enh_service_fee">Enh Service Fee</label>#}
-{#                    {{ create_form.enh_service_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_enh_consulting_fee">Enh Consulting Fee</label>#}
-{#                    {{ create_form.enh_consulting_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_ded_service_fee">Ded Service Fee</label>#}
-{#                    {{ create_form.ded_service_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_ded_consulting_fee">Ded Consulting Fee</label>#}
-{#                    {{ create_form.ded_consulting_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_reg_lite_service_fee">Reg-Lite Service Fee</label>#}
-{#                    {{ create_form.reg_lite_service_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_reg_lite_consulting_fee">Reg-Lite Consulting Fee</label>#}
-{#                    {{ create_form.reg_lite_consulting_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_enh_lite_service_fee">Enh-Lite Service Fee</label>#}
-{#                    {{ create_form.enh_lite_service_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_enh_lite_consulting_fee">Enh-Lite Consulting Fee</label>#}
-{#                    {{ create_form.enh_lite_consulting_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_mobile_gateway_service_fee">Mobile Gateway Service Fee</label>#}
-{#                    {{ create_form.mobile_gateway_service_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_mobile_gateway_consulting_fee">Mobile Gateway Consulting Fee</label>#}
-{#                    {{ create_form.mobile_gateway_consulting_fee }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_is_low_tech-ao">Low Tech AO?</label>#}
-{#                    {{ create_form.is_low_tech_ao }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_no_historical_usage">No Historical Usage?</label>#}
-{#                    {{ create_form.no_historical_usage }}#}
-{#                </div>#}
-{#                <div class="col-6 mb-3">#}
-{#                    <label for="id_notes">Notes</label>#}
-{#                    {{ create_form.notes }}#}
-{#                </div>#}
-{#                <div class="col-12 mt-3">#}
-{#                    <div class="col-sm-5 col-6 mx-auto">#}
-{#                        <button type="submit" class="btn btn-primary w-100">Save</button>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </form>#}
+            <form method="post" class="row" id="scheduleCreationForm">
+                {% csrf_token %}
+                <div class="col-12 mb-3">
+                    <label for="id_name">Name</label>
+                    {{ form.name }}
+                </div>
+                <div class="col-6 mb-3">
+                    <label for="id_start_time">Start Time</label>
+                    {{ form.start_time }}
+                </div>
+                <div class="col-6 mb-3">
+                    <label for="id_end_time">End Time</label>
+                    {{ form.end_time }}
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="id_days">Repeat On:</label>
+{#                    {{ form.days }}#}
+                    <div class="row">
+                        <div class="col-md-6 my-2">
+                            {% if "Mon" in form.days.value %}
+                                <button type="button" id="Mon" class="btn btn-secondary w-100 day-btn">Monday</button>
+                            {% else %}
+                                <button type="button" id="Mon" class="btn btn-outline-secondary w-100 day-btn">Monday</button>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 my-2">
+                            {% if "Tue" in form.days.value %}
+                                <button type="button" id="Tue" class="btn btn-secondary w-100 day-btn">Tuesday</button>
+                            {% else %}
+                                <button type="button" id="Tue" class="btn btn-outline-secondary w-100 day-btn">Tuesday</button>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 my-2">
+                            {% if "Wed" in form.days.value %}
+                                <button type="button" id="Wed" class="btn btn-secondary w-100 day-btn">Wednesday</button>
+                            {% else %}
+                                <button type="button" id="Wed" class="btn btn-outline-secondary w-100 day-btn">Wednesday</button>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 my-2">
+                            {% if "Thu" in form.days.value %}
+                                <button type="button" id="Thu" class="btn btn-secondary w-100 day-btn">Thursday</button>
+                            {% else %}
+                                <button type="button" id="Thu" class="btn btn-outline-secondary w-100 day-btn">Thursday</button>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 my-2">
+                            {% if "Fri" in form.days.value %}
+                                <button type="button" id="Fri" class="btn btn-secondary w-100 day-btn">Friday</button>
+                            {% else %}
+                                <button type="button" id="Fri" class="btn btn-outline-secondary w-100 day-btn">Friday</button>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 my-2">
+                            {% if "Sat" in form.days.value %}
+                                <button type="button" id="Sat" class="btn btn-secondary w-100 day-btn">Saturday</button>
+                            {% else %}
+                                <button type="button" id="Sat" class="btn btn-outline-secondary w-100 day-btn">Saturday</button>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 my-2 mx-auto">
+                            {% if "Sun" in form.days.value %}
+                                <button type="button" id="Sun" class="btn btn-secondary w-100 day-btn">Sunday</button>
+                            {% else %}
+                                <button type="button" id="Sun" class="btn btn-outline-secondary w-100 day-btn">Sunday</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-3">
+                    <div class="col-sm-5 col-6 mx-auto">
+                        <button type="submit" class="btn btn-primary w-100">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<script src="{% static 'game_server_management/schedule_create_form.js' %}"></script>
 
 {% endblock %}

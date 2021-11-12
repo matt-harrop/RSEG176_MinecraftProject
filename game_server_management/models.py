@@ -16,28 +16,25 @@ from pkg_resources import resource_filename
 
 class Schedule(models.Model):
     name = models.CharField(max_length=200)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
-    class DaysOfWeek(models.TextChoices):
-        MONDAY = 'Mon', _('Monday')
-        TUESDAY = 'Tue', _('Tuesday')
-        WEDNESDAY = 'Wed', _('Wednesday')
-        THURSDAY = 'Thu', _('Thursday')
-        FRIDAY = 'Fri', _('Friday')
-        SATURDAY = 'Sat', _('Saturday')
-        SUNDAY = 'Sun', _('Sunday')
+    # class DaysOfWeek(models.TextChoices):
+    #     MONDAY = 'Mon', _('Monday')
+    #     TUESDAY = 'Tue', _('Tuesday')
+    #     WEDNESDAY = 'Wed', _('Wednesday')
+    #     THURSDAY = 'Thu', _('Thursday')
+    #     FRIDAY = 'Fri', _('Friday')
+    #     SATURDAY = 'Sat', _('Saturday')
+    #     SUNDAY = 'Sun', _('Sunday')
 
-    days = models.CharField(
-        max_length=30,
-        choices=DaysOfWeek.choices,
-        default=None,
-    )
+    days = models.JSONField()
 
 
 class Server(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
     instance_id = models.CharField(max_length=200)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     last_stop_time = models.DateTimeField(null=True)
     last_start_time = models.DateTimeField(default=timezone.now)
     billing_hours_running_total = models.IntegerField(default=0)

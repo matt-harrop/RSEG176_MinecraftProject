@@ -180,18 +180,18 @@ def create_update_schedule(request, id=None):
                           {'form': form, 'schedule': schedule})
         else:
             return render(request, 'game_server_management/create-schedule.html',
-                          {'create_form': ScheduleCreationForm()})
-    # else:
-    #     try:
-    #         if id:
-    #             provider = Provider.objects.get(id=id)
-    #             form = ProviderCreationForm(request.POST, instance=provider)
-    #         else:
-    #             form = ProviderCreationForm(request.POST)
-    #         new_provider = form.save(commit=False)
-    #         new_provider.save()
-    #         return redirect('list_providers')
-    #     except ValueError:
-    #         return render(request, 'main_dashboard/providers/create_provider.html',
-    #                       {'create_form': ProviderCreationForm(),
-    #                        'error': 'Some data submitted was invalid; please correct and try again.'})
+                          {'form': ScheduleCreationForm()})
+    else:
+        try:
+            if id:
+                schedule = Schedule.objects.get(id=id)
+                form = ScheduleCreationForm(request.POST, instance=schedule)
+            else:
+                form = ScheduleCreationForm(request.POST)
+            new_schedule = form.save(commit=False)
+            new_schedule.save()
+            return redirect('list_schedules')
+        except ValueError:
+            return render(request, 'game_server_management/create-schedule.html',
+                          {'form': ScheduleCreationForm(),
+                           'error': 'Some data submitted was invalid; please correct and try again.'})
