@@ -35,11 +35,25 @@ def stop_servers(servers):
 def start_stop_servers():
     # Get next 15 minute mark:
     current_time = datetime.now().time().replace(second=0)
+    current_day = datetime.now().strftime("%a")
     while divmod(current_time.minute, 15)[1] != 0:
         current_time.replace(minute=current_time.minute + 1)
     # Start servers on a schedule with a matching start_time:
-    servers_to_start = Server.objects.filter(schedule__start_time=current_time)
+    results = Server.objects.filter(schedule__start_time=current_time)
+    # Filter results down to match the current day as well:
+    servers_to_start = []
+    for server in results:
+        # Days is stored as a JSON object, containing a single list which contains a single string
+        # which includes a list of comma-separated 3-character days, e.g. '["Mon,Tue,Sat"]'
+        if current_day in server.schedule.days[0]:
+            servers_to_start.append(server)
     start_servers(servers_to_start)
     # Stop servers on a schedule with a matching stop time:
-    servers_to_stop = Server.objects.filter(schedule__end_time=current_time)
+    results2 = Server.objects.filter(schedule__end_time=current_time)
+    servers_to_stop = []
+    for server in results2:
+        # Days is stored as a JSON object, containing a single list which contains a single string
+        # which includes a list of comma-separated 3-character days, e.g. '["Mon,Tue,Sat"]'
+        if current_day in server.schedule.days[0]:
+            servers_to_stop.append(server)
     stop_servers(servers_to_stop)

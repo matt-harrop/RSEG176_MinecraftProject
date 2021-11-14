@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 import boto3
 
@@ -35,6 +36,16 @@ def home(request):
             if aws_object.instance_id == server_object.instance_id:
                 dict_to_add["aws_object"] = aws_object
         full_instances.append(dict_to_add)
+
+    #     For testing email
+
+    send_mail(
+        'TestEmail',
+        'This is a message testing the automated Python Scheduler.',
+        'messages@longlookconsulting.com',
+        ['osaintspreserveus@live.com'],
+        fail_silently=False
+    )
 
     return render(request, 'game_server_management/index.html', {
         # 'instances': ec2_instances,
