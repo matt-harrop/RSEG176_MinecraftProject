@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 import boto3
+from mcstatus import MinecraftServer
 
 # Create your views here.
 from game_server_management.forms import ScheduleCreationForm
@@ -35,6 +36,14 @@ def home(request):
         for aws_object in ec2_instances:
             if aws_object.instance_id == server_object.instance_id:
                 dict_to_add["aws_object"] = aws_object
+        #     Use 'mcstatus' library to get basic server info:
+                mc_status = None
+                try:
+                    mc_server = MinecraftServer(aws_object.public_ip_address, 25565)
+                    mc_status = mc_server.status()
+                except:
+                    pass
+                dict_to_add["mc_status"] = mc_status
         full_instances.append(dict_to_add)
 
     return render(request, 'game_server_management/index.html', {
