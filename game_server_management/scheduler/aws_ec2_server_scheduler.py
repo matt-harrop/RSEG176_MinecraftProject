@@ -17,6 +17,8 @@ def start_servers(servers):
     response = ec2.start_instances(
         InstanceIds=instance_ids
     )
+
+
 #     Should check here for success of starting/stopping for updating servers, probably.
 
 def stop_servers(servers):
@@ -29,6 +31,8 @@ def stop_servers(servers):
     response = ec2.stop_instances(
         InstanceIds=instance_ids
     )
+
+
 #     Should check here for success of starting/stopping for updating servers, probably.
 
 
