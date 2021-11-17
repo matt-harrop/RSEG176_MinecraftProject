@@ -37,16 +37,6 @@ def home(request):
                 dict_to_add["aws_object"] = aws_object
         full_instances.append(dict_to_add)
 
-    #     For testing email
-
-    send_mail(
-        'TestEmail',
-        'This is a message testing the automated Python Scheduler.',
-        'messages@longlookconsulting.com',
-        ['osaintspreserveus@live.com'],
-        fail_silently=False
-    )
-
     return render(request, 'game_server_management/index.html', {
         # 'instances': ec2_instances,
         # 'server_objects': server_objects
