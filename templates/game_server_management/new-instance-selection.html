@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load boto3_filters %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6 mx-auto py-5 text-center">
+            <h1 class="display-3">Select Server Type</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9 py-5 mx-auto">
+            <div class="row">
+                <div class="col-sm-6 selection-card">
+                    <div class="border rounded-3 p-3 m-3 position-relative">
+                        <h1>Teeny</h1>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">CPUs: 2</li>
+                            <li class="list-group-item">Processor: Up to 3.3 GHz Intel Scalable</li>
+                            <li class="list-group-item">Memory: 4 GB</li>
+                            <li class="list-group-item">Network Performance: Okay</li>
+                        </ul>
+                        <a href="{% url 'create_server' 't2.medium' %}" class="stretched-link"></a>
+                    </div>
+                </div>
+                <div class="col-sm-6 selection-card">
+                    <div class="border rounded-3 p-3 m-3 position-relative">
+                        <h1>Standard</h1>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">CPUs: 2</li>
+                            <li class="list-group-item">Processor: 64-bit ARM Built for Gaming</li>
+                            <li class="list-group-item">Memory: 4 GB</li>
+                            <li class="list-group-item">Network Performance: Better</li>
+                        </ul>
+                        <a href="{% url 'create_server' 'c6g.large' %}" class="stretched-link"></a>
+                    </div>
+                </div>
+                <div class="col-sm-6 selection-card">
+                    <div class="border rounded-3 p-3 m-3 position-relative">
+                        <h1>Mighty</h1>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">CPUs: 4</li>
+                            <li class="list-group-item">Processor: 64-bit ARM Built for Gaming</li>
+                            <li class="list-group-item">Memory: 8 GB</li>
+                            <li class="list-group-item">Network Performance: Great</li>
+                            <a href="{% url 'create_server' 'c6g.xlarge' %}" class="stretched-link"></a>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-6 selection-card">
+                    <div class="border rounded-3 p-3 m-3 position-relative">
+                        <h1>Behemoth</h1>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">CPUs: 8</li>
+                            <li class="list-group-item">Processor: 64-bit ARM Built for Gaming</li>
+                            <li class="list-group-item">Memory: 16 GB</li>
+                            <li class="list-group-item">Network Performance: Great</li>
+                        </ul>
+                        <a href="{% url 'create_server' 'c6g.2xlarge' %}" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'game_server_management/schedule_list_schedules.js' %}"></script>
+
+{% endblock %}

@@ -55,7 +55,12 @@ def home(request):
 
 
 @login_required
-def create_new_server(request):
+def select_new_server_type(request):
+    return render(request, 'game_server_management/new-instance-selection.html', {})
+
+
+@login_required
+def create_new_server(request, server_type):
     # Create new instance:
 
     ec2 = boto3.client('ec2', region_name='us-west-2')
@@ -74,7 +79,7 @@ def create_new_server(request):
         # Custom Minecraft server AMI.
         ImageId='ami-021710cc2ad32742b',
         # Shouldn't need an image this large; just needed something with more memory than t2.micro for testing.
-        InstanceType='t2.medium',
+        InstanceType=server_type,
         InstanceInitiatedShutdownBehavior='stop',
         # Could have this generated? Keep them all under one key for ease of testing.
         KeyName='game_server_key',
@@ -95,6 +100,10 @@ def create_new_server(request):
                         'Key': 'Name',
                         # Users probably want to use their own name here:
                         'Value': 'MinecraftServer_' + str(request.user.id) + str(random.randint(1, 100))
+                    },
+                    {
+                        'Key': 'User',
+                        'Value': request.user.username
                     }
                 ]
             }
