@@ -50,6 +50,7 @@
                                             <p class="mb-1 ip-address">IP Address: {{ instance.aws_object.public_ip_address }}</p>
                                         {% endif %}
                                         <p class="mb-1">Created: {{ instance.aws_object.launch_time }}</p>
+                                        <p class="mb-1">Type: {{ instance.aws_object.instance_type|instance_desc }}</p>
 
     {#                                    <p>{{ instance.aws_object.state_transition_reason }}</p>#}
                                         {% if instance.aws_object.state.Name == 'running' and instance.aws_object.state.state_transition_reason != None %}

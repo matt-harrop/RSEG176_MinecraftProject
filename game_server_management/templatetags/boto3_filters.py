@@ -18,4 +18,16 @@ def get_state_change_timestamp(value, arg="%m/%d"):
         return value
 
 
-# 2021-10-26 18:16:20 GMT
+@register.filter
+@stringfilter
+def instance_desc(value):
+    descriptions = {
+        "t2.medium": "Teeny",
+        "t2.large": "Standard",
+        "t2.xlarge": "Standard",
+        "t2.2xlarge": "Behemoth"
+    }
+    if descriptions[value]:
+        return descriptions[value]
+    else:
+        return value
