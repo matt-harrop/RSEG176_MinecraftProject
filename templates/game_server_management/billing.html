@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <h1 class="mt-5 mb-3 text-center">Billing</h1>
+    </div>
+    <div class="row justify-content-center mb-5">
+        <div class="col-sm-6">
+            {% for server_results in billing_results %}
+                <p>Server: {{ server_results.server.name }}</p>
+{#                <p>Start/Stop Times: {{ server_results.event_times }}</p>#}
+                <p>Billed Cost: {{ server_results.billed_cost }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'game_server_management/schedule_create_form.js' %}"></script>
+
+{% endblock %}

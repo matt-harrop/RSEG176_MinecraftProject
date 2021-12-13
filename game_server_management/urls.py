@@ -12,4 +12,5 @@ urlpatterns = [
     path('schedules/', views.list_schedules, name='list_schedules'),
     path('schedules/create', views.create_update_schedule, name='create_schedule'),
     path('schedules/<int:id>/update', views.create_update_schedule, name='update_schedule'),
+    path('billing/', views.billing_home, name='billing_home'),
 ]

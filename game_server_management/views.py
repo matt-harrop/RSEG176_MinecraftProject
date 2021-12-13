@@ -44,6 +44,7 @@ def home(request):
                 except:
                     pass
                 dict_to_add["mc_status"] = mc_status
+
         full_instances.append(dict_to_add)
 
     return render(request, 'game_server_management/index.html', {
@@ -64,6 +65,7 @@ def create_new_server(request, server_type):
     # Create new instance:
 
     ec2 = boto3.client('ec2', region_name='us-west-2')
+    server_name = 'MinecraftServer_' + str(request.user.id) + str(random.randint(1, 100))
     response = ec2.run_instances(
         BlockDeviceMappings=[
             {
@@ -99,7 +101,8 @@ def create_new_server(request, server_type):
                     {
                         'Key': 'Name',
                         # Users probably want to use their own name here:
-                        'Value': 'MinecraftServer_' + str(request.user.id) + str(random.randint(1, 100))
+                        # 'Value': 'MinecraftServer_' + str(request.user.id) + str(random.randint(1, 100))
+                        'Value': server_name
                     },
                     {
                         'Key': 'User',
@@ -118,6 +121,7 @@ def create_new_server(request, server_type):
 
     new_server.owner = request.user
     new_server.instance_id = response['Instances'][0]['InstanceId']
+    new_server.name = server_name
     new_server.save()
 
     # Redirect to homepage
@@ -170,11 +174,29 @@ def stop_server(request, instance_id):
     return redirect('home')
 
 
+@login_required
 def list_schedules(request):
     schedules = Schedule.objects.all()
     return render(request, 'game_server_management/list-schedules.html', {'schedules': schedules})
 
 
+@login_required
+def billing_home(request):
+    servers = Server.objects.filter(owner=request.user)
+    billing_results = []
+    for server in servers:
+        ind_billing_results = server.get_monthly_bill()
+        ind_billing_results["server"] = server
+        print(server.name)
+        print(str(ind_billing_results))
+        # billing_results.append(server.get_monthly_bill())
+        billing_results.append(ind_billing_results)
+    return render(request, 'game_server_management/billing.html', {
+        'billing_results': billing_results
+    })
+
+
+@login_required
 def create_update_schedule(request, id=None):
     if request.method == 'GET':
         if id:
